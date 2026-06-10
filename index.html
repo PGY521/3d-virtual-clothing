@@ -2,89 +2,153 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>3D虚拟服装试穿平台</title>
+    <title>3D虚拟服装试穿销售平台 | 创新创业大赛项目</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         *{margin:0;padding:0;box-sizing:border-box;font-family: "Microsoft YaHei",sans-serif}
-        body{background:#f8f9fa;padding:20px}
-        .container{max-width:1100px;margin:0 auto}
-        header{text-align:center;margin:30px 0}
-        h1{font-size: 28px;color:#222;margin-bottom:8px}
+        body{background:#f8f9fa;padding:16px}
+        .container{max-width:1200px;margin:0 auto}
+        header{text-align:center;margin:24px 0}
+        h1{font-size: 28px;color:#222;margin-bottom:6px}
         .subtitle{color:#666;font-size:16px}
-        
+        .shop-bar{
+            background:#ff5983;
+            color:#fff;
+            padding:10px 20px;
+            border-radius:12px;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            margin-bottom:20px;
+        }
+        .cart-tip{font-weight:bold}
         .box{
             display:flex;
             flex-wrap:wrap;
-            gap:30px;
+            gap:24px;
             justify-content:center;
             align-items:flex-start
         }
-
         #canvas{
             width:500px;
             height:700px;
             background:#fff;
             border-radius:16px;
-            box-shadow:0 8px 30px rgba(0,0,0,0.08)
+            box-shadow:0 8px 30px rgba(0,0,0,0.08);
+            position:relative;
+            overflow:hidden;
         }
-
-        .panel{
-            width:320px;
+        .loading{
+            position:absolute;
+            width:100%;
+            height:100%;
             background:#fff;
-            padding:28px;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-size:20px;
+            color:#ff5983;
+            z-index:99;
+        }
+        .panel{
+            width:340px;
+            background:#fff;
+            padding:24px;
             border-radius:16px;
             box-shadow:0 8px 30px rgba(0,0,0,0.08)
         }
-        .panel h3{margin-bottom:20px;color:#333;font-size:18px}
+        .panel h3{margin-bottom:16px;color:#333;font-size:18px;border-bottom:1px solid #eee;padding-bottom:8px}
+        .goods-item{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            padding:10px 0;
+            border-bottom:1px solid #f3f3f3;
+        }
+        .goods-name{font-size:15px;color:#333}
+        .goods-price{color:#ff3355;font-weight:bold}
         .btn{
             width:100%;
-            padding:14px;
-            margin:10px 0;
+            padding:12px;
+            margin:8px 0;
             background:#ff5983;
             color:#fff;
             border:none;
             border-radius:10px;
             font-size:15px;
-            cursor:pointer
+            cursor:pointer;
+            transition:0.2s
         }
         .btn:hover{background:#e63968}
-
-        .tips{margin-top:25px;color:#777;line-height:1.6;font-size:14px}
+        .btn-reset{background:#999}
+        .btn-reset:hover{background:#777}
+        .tips{margin-top:20px;color:#777;line-height:1.6;font-size:14px}
+        @media (max-width:900px){
+            .box{flex-direction:column;align-items:center}
+            #canvas{width:90vw;height:600px}
+            .panel{width:90vw}
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>3D虚拟服装试穿平台</h1>
-            <p class="subtitle">基于Web3D技术 | 沉浸式虚拟试衣 | 大学生创新创业项目</p>
+            <h1>3D虚拟服装试穿销售平台</h1>
+            <p class="subtitle">基于Web3D技术 | O2O服装新零售 | 大学生创新创业参赛项目</p>
         </header>
 
+        <div class="shop-bar">
+            <span>线上虚拟商城 · 支持试穿后下单</span>
+            <span class="cart-tip">🛒 购物车：<span id="cartNum">0</span>件</span>
+        </div>
+
         <div class="box">
-            <div id="canvas"></div>
+            <div id="canvas">
+                <div class="loading" id="loadText">3D模型加载中，请稍候...</div>
+            </div>
+
             <div class="panel">
-                <h3>虚拟换装</h3>
-                <button class="btn" onclick="setClothes(1)">白色连衣裙</button>
-                <button class="btn" onclick="setClothes(2)">粉色休闲装</button>
-                <button class="btn" onclick="setClothes(3)">蓝色牛仔套装</button>
-                <button class="btn" onclick="setClothes(0)">还原默认</button>
+                <h3>商品列表（一键试穿）</h3>
+                <div class="goods-item">
+                    <span class="goods-name">白色连衣裙</span>
+                    <span class="goods-price">¥129.00</span>
+                </div>
+                <button class="btn" onclick="setClothes(1)">试穿白色连衣裙</button>
+
+                <div class="goods-item">
+                    <span class="goods-name">粉色休闲套装</span>
+                    <span class="goods-price">¥99.00</span>
+                </div>
+                <button class="btn" onclick="setClothes(2)">试穿粉色休闲装</button>
+
+                <div class="goods-item">
+                    <span class="goods-name">蓝色牛仔套装</span>
+                    <span class="goods-price">¥159.00</span>
+                </div>
+                <button class="btn" onclick="setClothes(3)">试穿蓝色牛仔套装</button>
+
+                <button class="btn btn-reset" onclick="setClothes(0)">还原默认样式</button>
+                <button class="btn" onclick="addCart()">加入购物车（当前试穿款）</button>
 
                 <div class="tips">
-                    <p>🖱 鼠标拖动：360°旋转查看</p>
-                    <p>🖱 鼠标滚轮：放大/缩小</p>
-                    <p>👗 点击按钮：一键换装</p>
+                    <p>🖱 鼠标拖动画布：360°旋转模特，全方位查看服装</p>
+                    <p>🖱 鼠标滚轮上下滑动：放大/缩小画面</p>
+                    <p>👗 点击商品按钮一键试穿，满意可加入购物车下单</p>
                 </div>
             </div>
         </div>
     </div>
 
-<!-- 更换国内稳定镜像CDN，解决空白加载失败问题 -->
-<script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/controls/OrbitControls.js"></script>
+<!-- 国内稳定CDN源，解决境外加载空白 -->
+<script src="https://cdn.bootcdn.net/ajax/libs/three.js/r132/build/three.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/three.js/r132/examples/js/controls/OrbitControls.js"></script>
     <script>
         let scene,camera,renderer,controls,person,clothes=null;
-        init();loop();
+        let cartCount = 0;
+        window.onload = init;
 
         function init(){
+            const loadDom = document.getElementById("loadText");
             scene=new THREE.Scene();
             scene.background=new THREE.Color(0xf8f9fa);
             camera=new THREE.PerspectiveCamera(50,500/700,.1,1000);
@@ -93,10 +157,10 @@
             renderer.setSize(500,700);
             document.getElementById("canvas").appendChild(renderer.domElement);
             
-            // 加强灯光，防止模型看不见
-            const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
-            const dirLight = new THREE.DirectionalLight(0xffffff, 0.6);
-            dirLight.position.set(3, 5, 4);
+            // 双重补光，杜绝模型发黑看不见
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.9);
+            const dirLight = new THREE.DirectionalLight(0xffffff, 0.7);
+            dirLight.position.set(3, 6, 5);
             scene.add(ambientLight, dirLight);
 
             controls=new THREE.OrbitControls(camera,renderer.domElement);
@@ -111,22 +175,43 @@
             head.position.y=1.15;
             person.add(body,head);
             setClothes(1);
+
+            // 隐藏加载文字
+            loadDom.style.display = "none";
+            loop();
         }
 
+        // 切换服装
         function setClothes(t){
             if(clothes)person.remove(clothes);
             let g=new THREE.CylinderGeometry(.35,.5,1.15,16);
             let m;
-            if(t===1)m=new THREE.MeshLambertMaterial({color:0xffffff});
-            else if(t===2)m=new THREE.MeshLambertMaterial({color:0xf8bbd0});
-            else if(t===3)m=new THREE.MeshLambertMaterial({color:0x42a5f5});
-            else m=new THREE.MeshLambertMaterial({color:0xffffff});
+            if(t===1){
+                m=new THREE.MeshLambertMaterial({color:0xffffff});
+            }else if(t===2){
+                m=new THREE.MeshLambertMaterial({color:0xf8bbd0});
+            }else if(t===3){
+                m=new THREE.MeshLambertMaterial({color:0x42a5f5});
+            }else{
+                m=new THREE.MeshLambertMaterial({color:0xffffff});
+            }
             clothes=new THREE.Mesh(g,m);
             clothes.position.y=-.2;
             person.add(clothes);
         }
 
-        function loop(){requestAnimationFrame(loop);controls.update();renderer.render(scene,camera);}
+        // 加入购物车功能
+        function addCart(){
+            cartCount += 1;
+            document.getElementById("cartNum").innerText = cartCount;
+            alert("已将当前试穿服装加入购物车！共"+cartCount+"件商品");
+        }
+
+        function loop(){
+            requestAnimationFrame(loop);
+            controls.update();
+            renderer.render(scene,camera);
+        }
     </script>
 </body>
 </html>
