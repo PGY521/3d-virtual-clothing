@@ -44,11 +44,19 @@
             height:100%;
             background:#fff;
             display:flex;
+            flex-direction:column;
+            gap:12px;
             align-items:center;
             justify-content:center;
             font-size:20px;
             color:#ff5983;
             z-index:99;
+            text-align:center;
+            padding:20px;
+        }
+        .fail-tip{
+            font-size:14px;
+            color:#999;
         }
         .panel{
             width:340px;
@@ -104,7 +112,10 @@
 
         <div class="box">
             <div id="canvas">
-                <div class="loading" id="loadText">3D模型加载中，请稍候...</div>
+                <div class="loading" id="loadText">
+                    3D模型加载中，请稍候...
+                    <div class="fail-tip">长时间无响应可切换手机热点刷新页面</div>
+                </div>
             </div>
 
             <div class="panel">
@@ -139,15 +150,36 @@
         </div>
     </div>
 
-<!-- 国内稳定CDN源，解决境外加载空白 -->
+<!-- 双CDN兜底加载，国内网络优先bootcdn，备用jsdelivr -->
 <script src="https://cdn.bootcdn.net/ajax/libs/three.js/r132/build/three.min.js"></script>
+<script>
+// CDN加载失败自动切换备用源
+if(!window.THREE){
+    const s = document.createElement('script');
+    s.src = "https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js";
+    document.head.appendChild(s);
+}
+</script>
 <script src="https://cdn.bootcdn.net/ajax/libs/three.js/r132/examples/js/controls/OrbitControls.js"></script>
+<script>
+if(!THREE?.OrbitControls){
+    const s2 = document.createElement('script');
+    s2.src = "https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/controls/OrbitControls.js";
+    document.head.appendChild(s2);
+}
+</script>
+
     <script>
         let scene,camera,renderer,controls,person,clothes=null;
         let cartCount = 0;
-        window.onload = init;
+        // 延迟初始化，等待引擎完全加载
+        setTimeout(init,1200);
 
         function init(){
+            if(!window.THREE){
+                document.getElementById("loadText").innerHTML = "3D引擎加载失败<br><span class='fail-tip'>请切换手机热点，按Ctrl+F5强制刷新</span>";
+                return;
+            }
             const loadDom = document.getElementById("loadText");
             scene=new THREE.Scene();
             scene.background=new THREE.Color(0xf8f9fa);
